@@ -1,0 +1,32 @@
+{
+  "chain_id": "0x1",
+  "changes": {
+    "allowances": [{"after": "400", "before": "500", "delta": "-100", "label": "TOKEN_A_TO_SPENDER_1"}],
+    "code": {
+      "after": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "before": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "changed": false
+    },
+    "native_balance": {"after": "975", "before": "1000", "delta": "-25"},
+    "nonce": {"after": "9", "before": "7", "delta": "2"},
+    "tokens": [{"after": "240", "before": "200", "delta": "40", "label": "TOKEN_A"}]
+  },
+  "from": {
+    "allowances": [{"label": "TOKEN_A_TO_SPENDER_1", "spender": "0x0000000000000000000000000000000000000003", "token": "0x0000000000000000000000000000000000000002", "value": "500"}],
+    "block": {"hash": "0x1111111111111111111111111111111111111111111111111111111111111111", "number": "0x10"},
+    "code": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "native_balance": "1000",
+    "nonce": "7",
+    "tokens": [{"contract": "0x0000000000000000000000000000000000000002", "label": "TOKEN_A", "value": "200"}]
+  },
+  "schema_version": 1,
+  "to": {
+    "allowances": [{"label": "TOKEN_A_TO_SPENDER_1", "spender": "0x0000000000000000000000000000000000000003", "token": "0x0000000000000000000000000000000000000002", "value": "400"}],
+    "block": {"hash": "0x2222222222222222222222222222222222222222222222222222222222222222", "number": "0x20"},
+    "code": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "native_balance": "975",
+    "nonce": "9",
+    "tokens": [{"contract": "0x0000000000000000000000000000000000000002", "label": "TOKEN_A", "value": "240"}]
+  },
+  "wallet": "0x0000000000000000000000000000000000000001"
+}
