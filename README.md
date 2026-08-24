@@ -3,7 +3,7 @@
 Deterministic, read-only EVM wallet exposure diffs between two exact block numbers. It answers searches such as **"historical ERC-20 allowance diff Python"**, **"compare wallet balance at two blocks"**, and **"eth_call historical state missing trie node"** without connecting a wallet or outsourcing the evidence to an indexer.
 
 ```console
-$ ./doit.sh
+$ ./install.sh
 ...
 WalletDiffAI deterministic summary
 chain=0x1 blocks=0x10..0x20
