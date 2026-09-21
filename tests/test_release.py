@@ -23,7 +23,8 @@ class ReleaseTests(unittest.TestCase):
     def test_public_sources_contain_no_private_project_marker(self):
         marker = "World" + "Forge"
         for path in ROOT.rglob("*"):
-            if path.is_file() and ".git" not in path.parts and "__pycache__" not in path.parts and path.name != "LICENSE":
+            if (path.is_file() and ".git" not in path.parts and ".venv" not in path.parts
+                    and "__pycache__" not in path.parts and path.name != "LICENSE"):
                 self.assertNotIn(marker, path.read_text(errors="ignore"), str(path))
 
     def test_cli_demo_and_verify(self):

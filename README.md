@@ -22,7 +22,7 @@ Broad ETL libraries such as [CheckTheChain](https://github.com/checkthechain/che
 
 - compare a declared wallet at two explicit block numbers;
 - record the block number and hash supporting each side;
-- re-read both headers after capture and abort if either hash changed;
+- re-read both headers and the chain ID after capture, then abort if any changed;
 - query native balance, nonce, code fingerprint, declared ERC-20 balances, and declared allowances;
 - recompute derived deltas during `verify`;
 - optionally send only address-redacted facts to a local OpenAI-compatible server.
@@ -55,9 +55,9 @@ Create `spec.json`:
 Then run:
 
 ```bash
-./run.sh capture spec.json report.json --rpc-url http://127.0.0.1:8545
-./run.sh verify report.json
-./run.sh summary report.json
+./cli.sh capture spec.json report.json --rpc-url http://127.0.0.1:8545
+./cli.sh verify report.json
+./cli.sh summary report.json
 ```
 
 The RPC client permits only `eth_chainId`, `eth_getBlockByNumber`, `eth_getBalance`, `eth_getTransactionCount`, `eth_getCode`, and `eth_call`. It has no transaction-submission method. See Ethereum's official [JSON-RPC API](https://ethereum.org/en/developers/apis/json-rpc/) and [EIP-1898 block identifiers](https://eips.ethereum.org/EIPS/eip-1898).
@@ -69,13 +69,13 @@ An archival RPC may be necessary. Errors such as `missing trie node`, `header no
 Generate the exact redacted prompt without running a model:
 
 ```bash
-./run.sh prompt report.json prompt.json
+./cli.sh prompt report.json prompt.json
 ```
 
 Or use a server bound to loopback:
 
 ```bash
-./run.sh explain report.json --api-url http://127.0.0.1:8080 --model local-model
+./cli.sh explain report.json --api-url http://127.0.0.1:8080 --model local-model
 ```
 
 Non-loopback model URLs are rejected. Raw wallet, token, and spender addresses are not placed in the prompt. Model text is labeled `untrusted_model_commentary`; the report remains the authority.
@@ -85,7 +85,7 @@ Non-loopback model URLs are rejected. Raw wallet, token, and spender addresses a
 - Read-only and non-custodial: no private keys, seed phrases, wallet connection, signing, approvals, transaction submission, trading, or custody.
 - Labels and contract addresses are supplied by the user; there is no token discovery or contract identity claim.
 - ERC-20 values are raw integer units. Metadata, decimals, prices, rebasing semantics, proxies, and nonstandard token behavior are not interpreted.
-- A stable header check narrows reorganization risk during capture but does not prove finality or RPC honesty.
+- Stable header and chain-ID checks narrow reorganization and endpoint-switching risk during capture but do not prove finality or RPC honesty.
 - Reports prove what the selected RPC returned, not legal ownership or intent.
 - Optional model commentary is untrusted and is not financial, legal, or security advice.
 
@@ -101,3 +101,5 @@ Apache-2.0. See [LICENSE](LICENSE).
 ## Standard launcher
 
 `./run.sh` is the normal entry point. It runs `./install.sh` automatically when setup is missing, then opens the PySide6 control panel with live output and actions for the demo, tests, repair, and stop. Use `./cli.sh` for CLI-only operation.
+
+`./demo.sh` runs the bundled offline demonstration. After installation, `./test.sh` runs the complete test suite. Both are the exact actions used by the GUI and CI.
