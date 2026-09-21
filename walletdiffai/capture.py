@@ -78,5 +78,8 @@ def capture(rpc: Any, raw_spec: Any) -> dict[str, Any]:
     final_headers = [_header(rpc, spec["from_block"]), _header(rpc, spec["to_block"])]
     if first_headers != final_headers:
         raise WalletDiffError("block hash changed during capture; no report was written")
+    final_chain_id = quantity(rpc.call("eth_chainId", []), "eth_chainId")
+    if chain_id != final_chain_id:
+        raise WalletDiffError("chain ID changed during capture; no report was written")
     return {"schema_version": 1, "chain_id": chain_id, "wallet": spec["wallet"],
             "from": before, "to": after, "changes": build_changes(before, after)}

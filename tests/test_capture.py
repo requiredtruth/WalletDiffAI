@@ -11,6 +11,7 @@ from walletdiffai.rpc import RpcClient
 class RpcHandler(BaseHTTPRequestHandler):
     calls = []
     reorg = False
+    chain_change = False
     fail_calls = False
 
     def log_message(self, *_args):
@@ -30,7 +31,8 @@ class RpcHandler(BaseHTTPRequestHandler):
             self.wfile.write(response)
             return
         if method == "eth_chainId":
-            result = "0x1"
+            chain_calls = len([call for call in self.calls if call[0] == method])
+            result = "0x2" if self.chain_change and chain_calls > 1 else "0x1"
         elif method == "eth_getBlockByNumber":
             suffix = "f" if self.reorg and len([c for c in self.calls if c[0] == method]) > 2 else ("1" if params[0] == "0x10" else "2")
             result = {"number": params[0], "hash": "0x" + suffix * 64}
@@ -67,6 +69,7 @@ class CaptureTests(unittest.TestCase):
     def setUp(self):
         RpcHandler.calls = []
         RpcHandler.reorg = False
+        RpcHandler.chain_change = False
         RpcHandler.fail_calls = False
         self.spec = {"schema_version": 1, "wallet": "0x" + "01" * 20,
                      "from_block": "0x10", "to_block": "0x20",
@@ -92,6 +95,11 @@ class CaptureTests(unittest.TestCase):
     def test_header_change_aborts(self):
         RpcHandler.reorg = True
         with self.assertRaisesRegex(WalletDiffError, "block hash changed"):
+            capture(self.client(), self.spec)
+
+    def test_chain_change_aborts(self):
+        RpcHandler.chain_change = True
+        with self.assertRaisesRegex(WalletDiffError, "chain ID changed"):
             capture(self.client(), self.spec)
 
     def test_token_rpc_error_is_not_treated_as_zero(self):
